@@ -11,7 +11,7 @@
     android:gravity="top"
     android:minHeight="?attr/actionBarSize"
     android:theme="@style/DefaultToolbar"
-    app:elevation="4dp"
+    app:elevation="6dp"
     app:titleTextColor="@android:color/white">
 
     <TextView

@@ -32,4 +32,23 @@
     <string name="not_good">Not Good</string>
     <string name="good">Good</string>
     <string name="perfect">Perfect</string>
+    <string name="author_variable">Author: %1$s</string>
+    <string name="publisher_variable">Publisher: %1$s</string>
+    <string name="page_variable">Page: %1$s</string>
+    <string name="date_variable">Published Date: %1$s</string>
+    <string name="book_status_variable">Book Status: %1$s</string>
+    <string name="opps">Opps!</string>
+    <string name="we_did_not_found_this_book_for_swap">Sorry, we didn\'t found this book for swap.</string>
+    <string name="book_description">Book Description</string>
+    <string name="other_informations">Other Informations</string>
+    <string name="users_who_own_this_book">Users who own this book</string>
+    <string name="no_description_available">No description available.</string>
+    <string name="owner_s_description">Owner\'s description</string>
+    <string name="send_swap_request">Send Swap Request</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="are_you_sure_you_want_to_sign_out">Are you sure you want to sign out?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+
 </resources>

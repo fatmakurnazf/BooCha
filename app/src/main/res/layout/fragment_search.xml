@@ -12,7 +12,7 @@
         android:layout_height="?actionBarSize"
         android:background="@android:color/white"
         android:gravity="center_vertical"
-        app:elevation="4dp"
+        app:elevation="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

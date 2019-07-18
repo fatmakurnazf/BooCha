@@ -1,140 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray_background">
 
-    <View
-        android:id="@+id/backgroundTop"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/background_profile"
-        app:layout_constraintBottom_toTopOf="@id/backgroundBottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="2" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/backgroundBottom"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/gray_background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/backgroundTop"
-        app:layout_constraintVertical_weight="5" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/space_xlarge"
+            android:background="@drawable/background_profile"
+            app:layout_constraintBottom_toTopOf="@id/ivProfilePhoto"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardUserInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_large"
-        android:layout_marginTop="60dp"
-        android:minHeight="150dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="4dp"
-        app:layout_constraintBottom_toBottomOf="@id/backgroundTop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/backgroundBottom">
+        <View
+            android:id="@+id/backgroundTop"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/background_profile"
+            app:layout_constraintBottom_toTopOf="@id/backgroundBottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="2" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
-            android:padding="@dimen/space_medium">
+        <View
+            android:id="@+id/backgroundBottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/gray_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/backgroundTop" />
 
-            <TextView
-                android:id="@+id/tvUsername"
-                android:layout_width="wrap_content"
+        <ImageButton
+            android:id="@+id/btnSignOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space_large"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_exit_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardUserInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space_large"
+            android:minHeight="150dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:layout_constraintBottom_toBottomOf="@id/backgroundTop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/backgroundBottom">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textColor="@color/text_color_dark_gray"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Cafer Mert Ceyhan" />
+                android:layout_marginTop="50dp"
+                android:padding="@dimen/space_medium">
 
-            <TextView
-                android:id="@+id/tvSwappableCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_medium"
-                android:text="0"
-                android:textColor="@color/text_color_dark_gray"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/tvSwappable"
-                app:layout_constraintEnd_toStartOf="@id/tvSwappedCount"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvUsername" />
+                <TextView
+                    android:id="@+id/tvUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textColor="@color/text_color_dark_gray"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Name Surname" />
 
-            <TextView
-                android:id="@+id/tvSwappedCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_medium"
-                android:text="0"
-                android:textColor="@color/text_color_dark_gray"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/tvSwapped"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tvSwappableCount"
-                app:layout_constraintTop_toBottomOf="@id/tvUsername" />
+                <TextView
+                    android:id="@+id/tvSwappableCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_medium"
+                    android:text="0"
+                    android:textColor="@color/text_color_dark_gray"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/tvSwappable"
+                    app:layout_constraintEnd_toStartOf="@id/tvSwappedCount"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvUsername" />
 
-            <TextView
-                android:id="@+id/tvSwappable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Swappable"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/tvSwappableCount"
-                app:layout_constraintStart_toStartOf="@id/tvSwappableCount"
-                app:layout_constraintTop_toBottomOf="@id/tvSwappableCount" />
+                <TextView
+                    android:id="@+id/tvSwappedCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_medium"
+                    android:text="0"
+                    android:textColor="@color/text_color_dark_gray"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/tvSwapped"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvSwappableCount"
+                    app:layout_constraintTop_toBottomOf="@id/tvUsername" />
 
-            <TextView
-                android:id="@+id/tvSwapped"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Swapped"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/tvSwappedCount"
-                app:layout_constraintStart_toStartOf="@id/tvSwappedCount"
-                app:layout_constraintTop_toBottomOf="@id/tvSwappedCount" />
+                <TextView
+                    android:id="@+id/tvSwappable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Swappable"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/tvSwappableCount"
+                    app:layout_constraintStart_toStartOf="@id/tvSwappableCount"
+                    app:layout_constraintTop_toBottomOf="@id/tvSwappableCount" />
+
+                <TextView
+                    android:id="@+id/tvSwapped"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Swapped"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/tvSwappedCount"
+                    app:layout_constraintStart_toStartOf="@id/tvSwappedCount"
+                    app:layout_constraintTop_toBottomOf="@id/tvSwappedCount" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ivProfilePhoto"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:elevation="5dp"
-        android:src="@drawable/profile"
-        app:civ_border_color="@color/gray_background"
-        app:civ_border_width="0.5dp"
-        app:layout_constraintBottom_toTopOf="@id/cardUserInfo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/cardUserInfo" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivProfilePhoto"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:elevation="5dp"
+            app:civ_border_color="@color/gray_background"
+            app:civ_border_width="0.5dp"
+            app:layout_constraintBottom_toTopOf="@id/cardUserInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cardUserInfo"
+            tools:src="@drawable/ic_add_photo" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/space_medium"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardUserInfo" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSwapList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_medium"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardUserInfo" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

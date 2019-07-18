@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray_background"
@@ -12,7 +13,7 @@
         android:layout_height="?actionBarSize"
         android:background="@android:color/white"
         android:gravity="center_vertical"
-        app:elevation="4dp"
+        app:elevation="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -77,9 +78,8 @@
                         android:id="@+id/ivBook"
                         android:layout_width="100dp"
                         android:layout_height="150dp"
-                        android:background="@color/gray_background"
-                        android:scaleType="center"
-                        android:src="@drawable/ic_add_a_photo_48dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_add_photo"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -92,60 +92,65 @@
                         android:layout_marginEnd="@dimen/space_medium"
                         android:background="@color/gray_background"
                         android:ellipsize="end"
-                        android:maxLines="2"
+                        android:maxLines="1"
                         android:textColor="@color/text_color_dark"
                         android:textSize="@dimen/text_medium"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/ivBook"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="@id/ivBook"
+                        tools:text="Book NameBook Name" />
 
                     <TextView
                         android:id="@+id/tvAuthorName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/space_medium"
-                        android:layout_marginTop="@dimen/space_small"
+                        android:layout_marginTop="@dimen/space_xsmall"
                         android:layout_marginEnd="@dimen/space_medium"
                         android:background="@color/gray_background"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/text_color_gray"
-                        android:textSize="@dimen/text_medium"
+                        android:textColor="@color/text_color_dark"
+                        android:textSize="@dimen/text_small"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/ivBook"
-                        app:layout_constraintTop_toBottomOf="@id/tvBookName" />
+                        app:layout_constraintTop_toBottomOf="@id/tvBookName"
+                        tools:text="Book's author" />
 
                     <TextView
-                        android:id="@+id/tvLanguage"
+                        android:id="@+id/tvBookDescription"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/space_medium"
+                        android:layout_marginTop="@dimen/space_medium"
                         android:layout_marginEnd="@dimen/space_medium"
-                        android:layout_marginBottom="@dimen/space_small"
                         android:background="@color/gray_background"
                         android:ellipsize="end"
-                        android:maxLines="1"
+                        android:maxLines="3"
                         android:textColor="@color/text_color_gray"
                         android:textSize="@dimen/text_small"
-                        app:layout_constraintBottom_toTopOf="@id/tvDate"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivBook" />
+                        app:layout_constraintStart_toEndOf="@id/ivBook"
+                        app:layout_constraintTop_toBottomOf="@id/tvAuthorName"
+                        tools:text="Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description" />
 
                     <TextView
-                        android:id="@+id/tvDate"
+                        android:id="@+id/tvBookPublisher"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/space_medium"
+                        android:layout_marginTop="@dimen/space_medium"
                         android:layout_marginEnd="@dimen/space_medium"
                         android:background="@color/gray_background"
-                        android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/text_color_gray"
+                        android:textColor="@color/text_color_light_gray"
                         android:textSize="@dimen/text_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivBook" />
+                        app:layout_constraintStart_toEndOf="@id/ivBook"
+                        tools:text="Publisher: Wentworth Press" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -199,12 +204,13 @@
                 <EditText
                     android:id="@+id/etOwnerDescription"
                     android:layout_width="match_parent"
-                    android:padding="@dimen/space_medium"
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/space_large"
                     android:background="@android:color/transparent"
                     android:hint="@string/description"
                     android:maxLines="6"
+                    android:padding="@dimen/space_medium"
+                    android:textColor="@color/text_color_gray"
                     android:textSize="@dimen/text_medium" />
 
             </androidx.cardview.widget.CardView>

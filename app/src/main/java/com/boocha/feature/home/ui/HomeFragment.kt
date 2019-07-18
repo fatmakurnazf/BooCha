@@ -9,16 +9,20 @@ import androidx.lifecycle.ViewModelProviders
 import com.boocha.R
 import com.boocha.base.BaseFragment
 import com.boocha.data.remote.util.Status
-import com.boocha.feature.home.adapter.SwapListAdapter
+import com.boocha.feature.home.adapter.HomeFragmentAdapter
 import com.boocha.feature.home.viewmodel.HomeFragmentViewModel
 import com.boocha.feature.search.ui.SearchActivity
-import kotlinx.android.synthetic.main.home_fragment_2.*
+import com.boocha.feature.swapdetail.ui.SwapDetailActivity
+import com.boocha.model.Swap
+import com.boocha.util.OnClickLister
+import kotlinx.android.synthetic.main.home_fragment.*
 
 
 class HomeFragment : BaseFragment() {
 
     lateinit var viewModel: HomeFragmentViewModel
-    lateinit var swapListAdapter: SwapListAdapter
+    lateinit var swapListAdapter: HomeFragmentAdapter
+    lateinit var swaps: MutableList<Swap>
 
     companion object {
 
@@ -30,7 +34,7 @@ class HomeFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.home_fragment_2, container, false)
+        return inflater.inflate(R.layout.home_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -58,6 +62,7 @@ class HomeFragment : BaseFragment() {
             when (resource.status) {
                 Status.SUCCESS -> {
                     if (resource.data != null) {
+                        swaps = resource.data
                         swapListAdapter.swapList = resource.data
                         swapListAdapter.notifyDataSetChanged()
                         dismissLoadingDialog()
@@ -74,7 +79,16 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun prepareSwapList() {
-        swapListAdapter = SwapListAdapter()
+        swapListAdapter = HomeFragmentAdapter()
+        swapListAdapter.onClickLister = object : OnClickLister {
+            override fun itemOnClick(view: View, position: Int) {
+                swaps[position].let { swap ->
+                    context?.let { context ->
+                        startActivity(SwapDetailActivity.newIntent(context, SwapDetailActivity.OPENED_FROM_HOME_ACTIVITY, swap = swap))
+                    }
+                }
+            }
+        }
 
         rvSwapList.apply {
             setHasFixedSize(true)

@@ -18,6 +18,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class FirebaseService {
@@ -42,7 +43,7 @@ class FirebaseService {
     }
 
     fun signUp(user: User, onSuccessListener: OnSuccessListener<Void>, onFailureListener: OnFailureListener) {
-        firebaseAuth.createUserWithEmailAndPassword(user.email, user.password)
+        firebaseAuth.createUserWithEmailAndPassword(user.email ?: "", user.password ?: "")
                 .addOnSuccessListener {
                     user.id = firebaseAuth.currentUser?.uid ?: ""
                     saveUserToDatabase(user, onSuccessListener, onFailureListener)
@@ -60,6 +61,16 @@ class FirebaseService {
         database.collection(USERS).document(id).get()
                 .addOnSuccessListener { user ->
                     onSuccessListener.onSuccess(snapshotToUser(user))
+                }
+                .addOnFailureListener {
+                    onFailureListener.onFailure(it)
+                }
+    }
+
+    fun getUserSwaps(id: String, onSuccessListener: OnSuccessListener<MutableList<Swap>>, onFailureListener: OnFailureListener) {
+        database.collection(USERS).document(id).collection(SWAP_LIST).get()
+                .addOnSuccessListener {
+                    onSuccessListener.onSuccess(it.toObjects(Swap::class.java))
                 }
                 .addOnFailureListener {
                     onFailureListener.onFailure(it)
@@ -96,6 +107,26 @@ class FirebaseService {
                 }
     }
 
+    fun searchBookInFirebase(bookId: String, onSuccessListener: OnSuccessListener<ArrayList<Swap?>>, onFailureListener: OnFailureListener) {
+        database.collection(SWAP_LIST).whereEqualTo("book.id", bookId).get()
+                .addOnSuccessListener {
+                    val books = it.toObjects(Swap::class.java)
+
+                    if (books.size == 0) {
+                        onFailureListener.onFailure(Exception())
+                    } else {
+                        val arrayList = ArrayList<Swap?>()
+                        for (book in books) {
+                            arrayList.add(book)
+                        }
+
+                        onSuccessListener.onSuccess(arrayList)
+                    }
+                }.addOnFailureListener {
+                    onFailureListener.onFailure(it)
+                }
+    }
+
     fun addSwap(image: File, swap: Swap, onSuccessListener: OnSuccessListener<Void>, onFailureListener: OnFailureListener) {
         val id = UUID.randomUUID()
 
@@ -107,12 +138,16 @@ class FirebaseService {
 
                         val documentId = UUID.randomUUID()
                         writeBatch.set(database.collection(SWAP_LIST).document(documentId.toString()), swap)
-                        writeBatch.set(database.collection(USERS).document(getCurrentUserAccount()?.uid!!).collection(SWAP_LIST).document(documentId.toString()), mapOf(
+                        writeBatch.set(
+                                database.collection(USERS).document(getCurrentUserAccount()?.uid!!).collection(SWAP_LIST).document(
+                                        documentId.toString()
+                                ), mapOf(
                                 "data" to swap.date,
                                 "swapStatus" to swap.swapStatus,
                                 "imageUri" to swap.imageUri,
                                 "book" to swap.book
-                        ))
+                        )
+                        )
                         writeBatch.commit().addOnSuccessListener {
                             onSuccessListener.onSuccess(it)
                         }.addOnFailureListener {
@@ -158,7 +193,7 @@ class FirebaseService {
                 "lastLogin" to getCurrentTime()
         )
 
-        database.collection(USERS).document(user.id).set(data)
+        database.collection(USERS).document(user.id ?: "").set(data)
                 .addOnSuccessListener {
                     onSuccessListener.onSuccess(it)
                     signOut()

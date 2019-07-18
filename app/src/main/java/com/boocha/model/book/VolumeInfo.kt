@@ -32,7 +32,7 @@ data class VolumeInfo(
         @SerializedName("title")
         val title: String?,
         @SerializedName("imageLinks")
-        val imageLinks: ImageLinks,
+        val imageLinks: ImageLinks?,
         @SerializedName("authors")
-        val authors: List<String>
+        val authors: List<String>?
 ) : Parcelable

@@ -8,9 +8,10 @@
     android:layout_marginTop="@dimen/space_medium"
     android:layout_marginEnd="@dimen/space_large"
     android:layout_marginBottom="@dimen/space_medium"
+    android:background="?selectableItemBackground"
     android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical"
-    android:stateListAnimator="@drawable/animation"
     app:cardBackgroundColor="@android:color/white"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true">
@@ -18,7 +19,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="?selectableItemBackground"
         android:padding="@dimen/space_large">
 
         <ImageView
@@ -34,7 +35,7 @@
             android:id="@+id/tvBookName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_medium"
+            android:layout_marginTop="@dimen/space_large"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/text_color_dark"
@@ -63,8 +64,10 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="@dimen/space_large"
+            android:layout_marginEnd="@dimen/space_medium"
             app:civ_border_color="@color/gray_background"
             app:civ_border_width="0.5dp"
+            app:layout_constraintEnd_toStartOf="@id/tvUsername"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvBookDescription"
             tools:src="@drawable/profile" />
@@ -73,28 +76,25 @@
             android:id="@+id/tvUsername"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_medium"
             android:maxLines="1"
             android:textColor="@color/text_color_gray"
             android:textSize="@dimen/text_small"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/tvDate"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/ivUser"
-            app:layout_constraintTop_toTopOf="@id/ivUser"
+            app:layout_constraintTop_toBottomOf="@id/tvBookDescription"
             tools:text="Username" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_medium"
             android:maxLines="1"
             android:textColor="@color/text_color_gray"
             android:textSize="@dimen/text_xsmall"
-            app:layout_constraintBottom_toBottomOf="@id/ivUser"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivUser"
+            app:layout_constraintStart_toStartOf="@id/tvUsername"
             app:layout_constraintTop_toBottomOf="@id/tvUsername"
             tools:text="one day ago" />
 

@@ -6,6 +6,7 @@ import com.boocha.data.Repository
 import com.boocha.data.remote.FirebaseService
 import com.boocha.data.remote.util.Resource
 import com.boocha.data.remote.util.Status
+import com.boocha.model.Swap
 import com.boocha.model.User
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -13,6 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 class ProfileFragmentViewModel : ViewModel() {
 
     val userLiveData = MutableLiveData<Resource<User?>>()
+    val swapsLiveData = MutableLiveData<Resource<MutableList<Swap>>>()
 
     private val repository = Repository(FirebaseService())
 
@@ -27,7 +29,19 @@ class ProfileFragmentViewModel : ViewModel() {
         })
     }
 
+    fun getUserSwaps(id: String) {
+        repository.getUserSwaps(id, OnSuccessListener {
+            swapsLiveData.value = Resource(Status.SUCCESS, it, null)
+        }, OnFailureListener {
+            swapsLiveData.value = Resource(Status.ERROR, null, it.localizedMessage)
+        })
+    }
+
     fun getCurrentUserAccount() {
         repository.getCurrentUserAccount()
+    }
+
+    fun signOut() {
+        repository.signOut()
     }
 }

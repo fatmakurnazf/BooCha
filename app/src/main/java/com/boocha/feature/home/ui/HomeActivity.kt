@@ -114,7 +114,7 @@ class HomeActivity : BaseActivity() {
 
     private fun navigateToProfileFragment() {
         replaceFragment(
-                com.boocha.R.id.fragmentHolder,
+                R.id.fragmentHolder,
                 ProfileFragment.newInstance(viewModel.getCurrentFirebaseUser()?.uid),
                 ProfileFragment.TAG,
                 false

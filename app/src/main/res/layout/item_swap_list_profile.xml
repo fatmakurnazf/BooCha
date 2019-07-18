@@ -3,20 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/space_large"
     android:layout_marginTop="@dimen/space_medium"
     android:layout_marginEnd="@dimen/space_large"
     android:layout_marginBottom="@dimen/space_medium"
-    android:background="?selectableItemBackground"
     android:orientation="vertical"
     app:cardBackgroundColor="@android:color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?selectableItemBackground"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
         android:padding="@dimen/space_large">
+
+        <ImageView
+            android:id="@+id/ivBook"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/book" />
 
         <TextView
             android:id="@+id/tvBookName"
@@ -26,12 +34,12 @@
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_medium"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_medium"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivBook"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Book NameBook Name" />
 
@@ -40,20 +48,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_medium"
-            android:layout_marginTop="@dimen/space_xsmall"
             android:layout_marginEnd="@dimen/space_medium"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_color_dark"
-            android:textSize="@dimen/text_small"
-            android:textStyle="bold"
+            android:textColor="@color/text_color_gray"
+            android:textSize="@dimen/text_medium"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivBook"
             app:layout_constraintTop_toBottomOf="@id/tvBookName"
             tools:text="Book's author" />
 
         <TextView
-            android:id="@+id/tvBookDescription"
+            android:id="@+id/tvDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_medium"
@@ -64,24 +70,26 @@
             android:textColor="@color/text_color_gray"
             android:textSize="@dimen/text_small"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivBook"
             app:layout_constraintTop_toBottomOf="@id/tvAuthorName"
-            tools:text="Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description Book's description" />
+            tools:text="Book Description Book Description Book Description Book Description Book Description Book Description Book Description" />
 
         <TextView
-            android:id="@+id/tvBookPublisher"
+            android:id="@+id/tvBookStatus"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_medium"
             android:layout_marginTop="@dimen/space_medium"
             android:layout_marginEnd="@dimen/space_medium"
-            android:maxLines="1"
-            android:textColor="@color/text_color_light_gray"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@color/text_color_gray"
             android:textSize="@dimen/text_small"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="Publisher: Wentworth Press" />
+            app:layout_constraintStart_toEndOf="@id/ivBook"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="Book Status: Good" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -17,6 +17,7 @@ import com.boocha.feature.search.BookItemClickEvent
 import com.boocha.feature.search.adapter.SearchAdapter
 import com.boocha.feature.search.viewmodel.SearchFragmentViewModel
 import com.boocha.model.book.Item
+import com.boocha.util.OnClickLister
 import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : BaseFragment() {
@@ -60,22 +61,20 @@ class SearchFragment : BaseFragment() {
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(text: Editable?) {
-                if ((text?.length ?: 2) > 3) {
-                    viewModel.searchBook(text?.toString() ?: "")
-                }
+                viewModel.searchBook(text?.toString() ?: "")
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
     }
 
     private fun initRecyclerView() {
         searchAdapter = SearchAdapter()
-        searchAdapter.onClickLister = object : SearchAdapter.OnClickLister {
+        searchAdapter.onClickLister = object : OnClickLister {
             override fun itemOnClick(view: View, position: Int) {
                 bookList[position]?.let { item ->
                     postEvent(BookItemClickEvent(item))

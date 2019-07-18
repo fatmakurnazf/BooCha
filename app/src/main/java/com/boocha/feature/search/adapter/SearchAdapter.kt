@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.boocha.R
 import com.boocha.model.book.Item
+import com.boocha.util.OnClickLister
 
 class SearchAdapter : RecyclerView.Adapter<SearchViewHolder>() {
 
@@ -25,9 +26,5 @@ class SearchAdapter : RecyclerView.Adapter<SearchViewHolder>() {
         bookList[position]?.let {
             holder.bind(it)
         }
-    }
-
-    interface OnClickLister {
-        fun itemOnClick(view: View, position: Int)
     }
 }

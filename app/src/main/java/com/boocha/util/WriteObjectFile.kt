@@ -1,6 +1,7 @@
 package com.boocha.util
 
 import android.content.Context
+import android.util.Log
 import java.io.*
 
 
@@ -18,7 +19,7 @@ class WriteObjectFile(private val parent: Context) {
 
     fun readObject(fileName: String): Any? {
         try {
-            filePath = parent.getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fileName
+            filePath = parent.applicationContext.filesDir.absolutePath + "/" + fileName
             fileIn = FileInputStream(filePath)
             objectIn = ObjectInputStream(fileIn)
             outputObject = objectIn!!.readObject()
@@ -32,6 +33,7 @@ class WriteObjectFile(private val parent: Context) {
             if (objectIn != null) {
                 try {
                     objectIn!!.close()
+                    Log.i("FILE", "USER_READIED")
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -46,14 +48,15 @@ class WriteObjectFile(private val parent: Context) {
             filePath = parent.applicationContext.filesDir.absolutePath + "/" + fileName
             fileOut = FileOutputStream(filePath)
             objectOut = ObjectOutputStream(fileOut)
-            objectOut!!.writeObject(inputObject)
-            fileOut!!.fd.sync()
+            objectOut?.writeObject(inputObject)
+            fileOut?.fd?.sync()
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {
             if (objectOut != null) {
                 try {
-                    objectOut!!.close()
+                    objectOut?.close()
+                    Log.i("FILE", "USER_UPDATED")
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -61,4 +64,14 @@ class WriteObjectFile(private val parent: Context) {
             }
         }
     }
+
+    fun deleteObject(fileName: String) {
+        try {
+            filePath = parent.applicationContext.filesDir.absolutePath + "/" + fileName
+            File(filePath).delete()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }

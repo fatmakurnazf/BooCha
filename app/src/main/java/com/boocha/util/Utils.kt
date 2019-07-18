@@ -1,6 +1,8 @@
 package com.boocha.util
 
 import android.annotation.SuppressLint
+import android.util.Log
+import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -13,17 +15,22 @@ fun getCurrentTime(): String {
 }
 
 fun dateDifference(date: String): String {
-    val diff = Date(getCurrentTime().toLong()).time - Date(date.toLong()).time
+    try {
+        val diff = Date(getCurrentTime().toLong()).time - Date(date.toLong()).time
 
-    val seconds = diff / 1000
-    val minutes = seconds / 60
-    val hours = minutes / 60
-    val days = hours / 24
+        val seconds = diff / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+        val days = hours / 24
 
-    return when {
-        days > 0 -> "$days days ago"
-        hours > 0 -> "$hours hours ago"
-        minutes > 0 -> "$minutes minutes ago"
-        else -> "$seconds seconds ago"
+        return when {
+            days > 0 -> "$days days ago"
+            hours > 0 -> "$hours hours ago"
+            minutes > 0 -> "$minutes minutes ago"
+            else -> "$seconds seconds ago"
+        }
+    }catch (exception: NumberFormatException){
+        Log.e("TIME","${exception.message}")
+        return ""
     }
 }

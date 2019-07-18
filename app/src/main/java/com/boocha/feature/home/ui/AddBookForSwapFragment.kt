@@ -30,8 +30,6 @@ import com.esafirm.imagepicker.features.ImagePicker
 import kotlinx.android.synthetic.main.fragment_add_book_for_swap.*
 import java.io.File
 import java.io.IOException
-import java.text.ParseException
-import java.text.SimpleDateFormat
 
 
 class AddBookForSwapFragment : BaseFragment() {
@@ -93,8 +91,7 @@ class AddBookForSwapFragment : BaseFragment() {
 
             REQUEST_CODE_SELECT_PHOTO -> {
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    ivBook.setImageDrawable(resources.getDrawable(R.drawable.ic_add_a_photo_48dp))
-                    ivBook.setBackgroundColor(resources.getColor(R.color.gray_background))
+                    ivBook.setImageDrawable(resources.getDrawable(R.drawable.ic_add_photo))
                 }
             }
         }
@@ -107,7 +104,7 @@ class AddBookForSwapFragment : BaseFragment() {
 
                 image = resizePhoto(selectedImage.path, 0, context!!)
             } else {
-                ivBook.setImageBitmap(null)
+                ivBook.setImageDrawable(resources.getDrawable(R.drawable.ic_add_photo))
                 image = null
             }
         }
@@ -180,21 +177,14 @@ class AddBookForSwapFragment : BaseFragment() {
     private fun updateUiWithBookItem(item: Item) {
         tvBookName.setBackgroundColor(Color.WHITE)
         tvAuthorName.setBackgroundColor(Color.WHITE)
-        tvLanguage.setBackgroundColor(Color.WHITE)
-        tvDate.setBackgroundColor(Color.WHITE)
+        tvBookDescription.setBackgroundColor(Color.WHITE)
+        tvBookPublisher.setBackgroundColor(Color.WHITE)
 
         tvBookName.text = item.volumeInfo?.title ?: ""
         tvAuthorName.text = item.volumeInfo?.authors?.get(0) ?: ""
-        item.volumeInfo?.publishedDate?.let { date ->
-            try {
-                val oldDate = SimpleDateFormat("yyyy-MM-dd").parse(date)
-                tvDate.text = "Published Date: ${SimpleDateFormat("dd.MM.yyyy").format(oldDate)}"
-            } catch (exception: ParseException) {
-                tvDate.text = ""
-            }
-        }
-        item.volumeInfo?.language?.let { language ->
-            tvLanguage.text = "Language: ${language.toUpperCase()}"
+        tvBookDescription.text = item.volumeInfo?.description ?: ""
+        item.volumeInfo?.publisher?.let {
+            tvBookPublisher.text = getString(R.string.publisher_variable, it)
         }
     }
 
@@ -204,11 +194,12 @@ class AddBookForSwapFragment : BaseFragment() {
         val author = item.volumeInfo?.authors?.get(0) ?: ""
         val description = item.volumeInfo?.description ?: ""
         val publisher = item.volumeInfo?.publisher ?: ""
+        val publishedDate = item.volumeInfo?.publishedDate ?: ""
         val isbn13 = item.volumeInfo?.industryIdentifiers?.get(1)?.identifier ?: ""
         val language = item.volumeInfo?.language ?: ""
         val pageCount = item.volumeInfo?.pageCount.toString()
 
-        return Book(id, title, author, description, publisher, isbn13, language, pageCount)
+        return Book(id, title, author, description, publisher, publishedDate, isbn13, language, pageCount)
     }
 
     private fun getBookStatus(): Int {

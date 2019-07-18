@@ -14,12 +14,7 @@ import java.io.File
 
 class Repository(private val firebaseService: FirebaseService) {
 
-    fun login(
-            email: String,
-            password: String,
-            onSuccessListener: OnSuccessListener<AuthResult>,
-            onFailureListener: OnFailureListener
-    ) {
+    fun login(email: String, password: String, onSuccessListener: OnSuccessListener<AuthResult>, onFailureListener: OnFailureListener) {
         firebaseService.login(email, password, onSuccessListener, onFailureListener)
     }
 
@@ -27,8 +22,16 @@ class Repository(private val firebaseService: FirebaseService) {
         firebaseService.signUp(user, onSuccessListener, onFailureListener)
     }
 
+    fun signOut() {
+        firebaseService.signOut()
+    }
+
     fun getUser(id: String, onSuccessListener: OnSuccessListener<User>, onFailureListener: OnFailureListener) {
         firebaseService.getUser(id, onSuccessListener, onFailureListener)
+    }
+
+    fun getUserSwaps(id: String, onSuccessListener: OnSuccessListener<MutableList<Swap>>, onFailureListener: OnFailureListener) {
+        firebaseService.getUserSwaps(id, onSuccessListener, onFailureListener)
     }
 
     fun getCurrentUserAccount(): FirebaseUser? {
@@ -45,6 +48,10 @@ class Repository(private val firebaseService: FirebaseService) {
 
     fun searchBook(query: String): Observable<SearchResponse> {
         return RetrofitServiceGenerator.service().searchBook("intitle:$query")
+    }
+
+    fun searchBookInFirebase(bookId: String, onSuccessListener: OnSuccessListener<ArrayList<Swap?>>, onFailureListener: OnFailureListener) {
+        firebaseService.searchBookInFirebase(bookId, onSuccessListener, onFailureListener)
     }
 
     fun addSwap(image: File, swap: Swap, onSuccessListener: OnSuccessListener<Void>, onFailureListener: OnFailureListener) {
