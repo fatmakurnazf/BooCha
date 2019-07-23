@@ -1,7 +1,13 @@
 package com.boocha.feature.home.ui
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +21,16 @@ import com.boocha.feature.home.viewmodel.ProfileFragmentViewModel
 import com.boocha.feature.login.ui.LoginActivity
 import com.boocha.model.Swap
 import com.boocha.model.User
+import com.boocha.util.PhotoOrientationUtil
 import com.boocha.util.SWAP_STATUS_ACTIVE
 import com.boocha.util.SWAP_STATUS_SWAPPED
 import com.boocha.util.WriteObjectFile
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile2.*
+import java.io.File
+import java.io.IOException
+
 
 class ProfileFragment : BaseFragment() {
 
@@ -36,6 +46,8 @@ class ProfileFragment : BaseFragment() {
         const val TAG = "profile_fragment"
 
         private const val BUNDLE_ID = "id"
+
+        private const val REQUEST_PICK_PHOTO = 100
 
         fun newInstance(id: String? = ""): ProfileFragment {
             val profileFragment = ProfileFragment()
@@ -63,10 +75,24 @@ class ProfileFragment : BaseFragment() {
         initOnClickListener()
         initRecyclerView()
         initUserLiveData()
-        initSwapsLiveDate()
+        initSwapsLiveData()
+        initUpdateProfilePhotoLiveData()
 
         viewModel.getUser(id)
         viewModel.getUserSwaps(id)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_PICK_PHOTO -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val image = getPath(data?.data!!)
+                    val imageFile = resizePhoto(image!!, 0, context!!)
+
+                    viewModel.updateProfilePhoto(id, imageFile)
+                }
+            }
+        }
     }
 
     private fun initOnClickListener() {
@@ -78,6 +104,7 @@ class ProfileFragment : BaseFragment() {
                         .setPositiveButton(getString(R.string.yes)) { dialog, _ ->
                             dialog.dismiss()
                             viewModel.signOut()
+                            writeObjectFile.deleteObject(WriteObjectFile.FILE_USER)
                             startActivity(LoginActivity.newIntent(context))
                             activity?.finish()
                         }
@@ -85,7 +112,10 @@ class ProfileFragment : BaseFragment() {
                         .show()
 
             }
-            viewModel.signOut()
+        }
+
+        ivProfilePhoto.setOnClickListener {
+            pickImageFromGallery()
         }
     }
 
@@ -105,9 +135,9 @@ class ProfileFragment : BaseFragment() {
                     dismissLoadingDialog()
                     updateUiWithUser(resource.data)
 
-                    resource.data?.let { user ->
-                        writeObjectFile.deleteObject(WriteObjectFile.FILE_USER)
-                    }
+                    writeObjectFile.writeObject(resource.data!!, WriteObjectFile.FILE_USER)
+
+
                 }
                 Status.ERROR -> {
                     dismissLoadingDialog()
@@ -119,7 +149,7 @@ class ProfileFragment : BaseFragment() {
         })
     }
 
-    private fun initSwapsLiveDate() {
+    private fun initSwapsLiveData() {
         viewModel.swapsLiveData.observe(this, Observer { resource ->
             when (resource.status) {
                 Status.SUCCESS -> {
@@ -137,6 +167,26 @@ class ProfileFragment : BaseFragment() {
             }
         })
 
+    }
+
+    private fun initUpdateProfilePhotoLiveData() {
+        viewModel.updateProfilePhotoLiveData.observe(this, Observer { resource ->
+            when (resource.status) {
+                Status.SUCCESS -> {
+                    resource.data?.let {
+                        dismissLoadingDialog()
+                        Glide.with(context!!).load(it).into(ivProfilePhoto)
+                    }
+                }
+                Status.ERROR -> {
+                    dismissLoadingDialog()
+                    showErrorDialog(resource.message)
+                }
+                Status.LOADING -> {
+                    showLoadingDialog()
+                }
+            }
+        })
     }
 
     private fun updateUiWithUser(user: User?) {
@@ -158,5 +208,67 @@ class ProfileFragment : BaseFragment() {
     private fun updateUiWithSwaps(swaps: MutableList<Swap>) {
         tvSwappableCount.text = (swaps.filter { it.swapStatus == SWAP_STATUS_ACTIVE }.size).toString()
         tvSwappedCount.text = (swaps.filter { it.swapStatus == SWAP_STATUS_SWAPPED }.size).toString()
+    }
+
+    private fun pickImageFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, REQUEST_PICK_PHOTO)
+    }
+
+    private fun resizePhoto(path: String, angle: Int, context: Context): File {
+        val truePath = if (path.startsWith("file://")) {
+            path.substring(7)
+        } else {
+            path
+        }
+        val imageFile = File(truePath)
+        try {
+            val uri = Uri.fromFile(imageFile)
+            var bmp = PhotoOrientationUtil.modifyOrientation(MediaStore.Images.Media.getBitmap(context.contentResolver, uri), truePath)
+            if (angle != 0) {
+                bmp = PhotoOrientationUtil.rotate(bmp, angle.toFloat())
+            }
+            val fOut = context.contentResolver.openOutputStream(uri)
+            val dstWidth: Double
+            val dstHeight: Double
+            if (bmp.width > bmp.height) {
+                dstWidth = if (bmp.width > 1920.0) {
+                    1920.0
+                } else {
+                    bmp.width.toDouble()
+                }
+                val scaleFactor = bmp.height.toDouble() / bmp.width.toDouble()
+                dstHeight = dstWidth * scaleFactor
+            } else {
+                dstHeight = if (bmp.height > 1920.0) {
+                    1920.0
+                } else {
+                    bmp.height.toDouble()
+                }
+                val scaleFactor = bmp.width.toDouble() / bmp.height.toDouble()
+                dstWidth = dstHeight * scaleFactor
+            }
+
+            bmp = Bitmap.createScaledBitmap(bmp, dstWidth.toInt(), dstHeight.toInt(), false)
+            bmp.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
+            fOut?.flush()
+            fOut?.close()
+            return imageFile
+        } catch (e: IOException) {
+            return imageFile
+        } catch (e: NullPointerException) {
+            return imageFile
+        }
+    }
+
+    fun getPath(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = context?.contentResolver!!.query(uri, projection, null, null, null)
+                ?: return null
+        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+        val s = cursor.getString(column_index)
+        cursor.close()
+        return s
     }
 }

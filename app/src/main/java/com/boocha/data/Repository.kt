@@ -5,6 +5,8 @@ import com.boocha.data.remote.util.RetrofitServiceGenerator
 import com.boocha.model.Swap
 import com.boocha.model.User
 import com.boocha.model.book.SearchResponse
+import com.boocha.model.message.Conversation
+import com.boocha.model.message.Message
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.AuthResult
@@ -58,4 +60,23 @@ class Repository(private val firebaseService: FirebaseService) {
         firebaseService.addSwap(image, swap, onSuccessListener, onFailureListener)
     }
 
+    fun getConversations(sender: User, onSuccessListener: OnSuccessListener<ArrayList<Conversation>>, onFailureListener: OnFailureListener) {
+        firebaseService.getConversations(sender, onSuccessListener, onFailureListener)
+    }
+
+    fun setNewConversation(newConversation: Conversation, onSuccessListener: OnSuccessListener<Conversation>, onFailureListener: OnFailureListener) {
+        firebaseService.setNewConversation(newConversation, onSuccessListener, onFailureListener)
+    }
+
+    fun sendMessage(conversationId: String, message: ArrayList<Message>?) {
+        firebaseService.sendMessage(conversationId, message)
+    }
+
+    fun listenMessages(conversationId: String, onSuccessListener: OnSuccessListener<Conversation>, onFailureListener: OnFailureListener) {
+        firebaseService.listenMessages(conversationId, onSuccessListener, onFailureListener)
+    }
+
+    fun updateProfilePhoto(id: String, imageFile: File, onSuccessListener: OnSuccessListener<Void>, onFailureListener: OnFailureListener) {
+        firebaseService.updateProfilePhoto(id, imageFile, onSuccessListener, onFailureListener)
+    }
 }

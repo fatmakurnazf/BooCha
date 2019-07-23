@@ -2,10 +2,13 @@ package com.boocha.data.remote
 
 import android.util.Log
 import androidx.core.net.toUri
+import com.boocha.data.remote.util.CONVERSATIONS
 import com.boocha.data.remote.util.SWAP_LIST
 import com.boocha.data.remote.util.USERS
 import com.boocha.model.Swap
 import com.boocha.model.User
+import com.boocha.model.message.Conversation
+import com.boocha.model.message.Message
 import com.boocha.util.getCurrentTime
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -137,12 +140,14 @@ class FirebaseService {
                         swap.imageUri = uri.toString()
 
                         val documentId = UUID.randomUUID()
+                        swap.id = documentId.toString()
                         writeBatch.set(database.collection(SWAP_LIST).document(documentId.toString()), swap)
                         writeBatch.set(
                                 database.collection(USERS).document(getCurrentUserAccount()?.uid!!).collection(SWAP_LIST).document(
                                         documentId.toString()
                                 ), mapOf(
-                                "data" to swap.date,
+                                "id" to swap.id,
+                                "date" to swap.date,
                                 "swapStatus" to swap.swapStatus,
                                 "imageUri" to swap.imageUri,
                                 "book" to swap.book
@@ -158,6 +163,102 @@ class FirebaseService {
                 .addOnFailureListener {
                     Log.e("", "")
                 }
+    }
+
+    fun getConversations(sender: User, onSuccessListener: OnSuccessListener<ArrayList<Conversation>>, onFailureListener: OnFailureListener) {
+        database.collection(CONVERSATIONS).whereEqualTo("sender.id", sender.id).get()
+                .addOnSuccessListener {
+                    val conversationArrayList = ArrayList<Conversation>()
+                    val senderConversation = it.toObjects(Conversation::class.java)
+                    if (senderConversation.isEmpty().not()) {
+                        for (conversation in senderConversation) {
+                            conversationArrayList.add(conversation)
+                        }
+                    }
+
+                    database.collection(CONVERSATIONS).whereEqualTo("receiver.id", sender.id).get()
+                            .addOnSuccessListener {
+                                val receiverConversation = it.toObjects(Conversation::class.java)
+                                if (receiverConversation.isEmpty().not()) {
+                                    for (conversation in receiverConversation) {
+                                        conversationArrayList.add(conversation)
+                                    }
+                                }
+                                onSuccessListener.onSuccess(conversationArrayList)
+                            }
+                            .addOnFailureListener {
+                                onFailureListener.onFailure(it)
+                            }
+                }
+                .addOnFailureListener {
+                    onFailureListener.onFailure(it)
+                }
+    }
+
+    fun setNewConversation(newConversation: Conversation, onSuccessListener: OnSuccessListener<Conversation>, onFailureListener: OnFailureListener) {
+        newConversation.id = UUID.randomUUID().toString()
+        database.collection(CONVERSATIONS).document(newConversation.id!!).set(newConversation)
+                .addOnSuccessListener {
+                    onSuccessListener.onSuccess(newConversation)
+                }
+                .addOnFailureListener {
+                    onFailureListener.onFailure(it)
+                }
+    }
+
+    fun sendMessage(conversationId: String, message: ArrayList<Message>?) {
+        database.collection(CONVERSATIONS).document(conversationId).update("messages", message)
+    }
+
+    fun listenMessages(conversationId: String, onSuccessListener: OnSuccessListener<Conversation>, onFailureListener: OnFailureListener) {
+        database.collection(CONVERSATIONS).document(conversationId).addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+            val conversation = documentSnapshot?.toObject(Conversation::class.java)
+            onSuccessListener.onSuccess(conversation)
+        }
+    }
+
+    fun updateProfilePhoto(userId: String, imageFile: File, onSuccessListener: OnSuccessListener<Void>, onFailureListener: OnFailureListener) {
+        val id = UUID.randomUUID()
+
+        val reference = storageRef.child("profilePhotos/$id")
+        storageRef.child("profilePhotos/$id").putFile(imageFile.toUri())
+                .addOnSuccessListener {
+                    reference.downloadUrl.addOnSuccessListener { profilePhotoUri ->
+
+                        writeBatch.update(database.collection(USERS).document(userId), "profilePhoto", profilePhotoUri.toString())
+
+                        database.collection(SWAP_LIST).whereEqualTo("owner.id", userId).get().addOnSuccessListener {
+                            for (document in it.documents) {
+                                document.reference.update("owner.profilePhoto", profilePhotoUri.toString())
+                            }
+                        }
+
+                        database.collection(CONVERSATIONS).whereEqualTo("receiver.id", userId).get().addOnSuccessListener {
+                            for (document in it.documents) {
+                                document.reference.update("receiver.profilePhoto", profilePhotoUri.toString())
+                            }
+                        }
+
+                        database.collection(CONVERSATIONS).whereEqualTo("sender.id", userId).get().addOnSuccessListener {
+                            for (document in it.documents) {
+                                document.reference.update("sender.profilePhoto", profilePhotoUri.toString())
+                            }
+                        }
+
+                        database.collection(CONVERSATIONS).whereEqualTo("swap.owner.id", userId).get().addOnSuccessListener {
+                            for (document in it.documents) {
+                                document.reference.update("swap.owner.profilePhoto", profilePhotoUri.toString())
+                            }
+                        }
+
+                        writeBatch.commit()
+                                .addOnSuccessListener { onSuccessListener.onSuccess(it) }
+                                .addOnFailureListener { onFailureListener.onFailure(it) }
+
+                    }
+                            .addOnFailureListener { onFailureListener.onFailure(it) }
+                }
+                .addOnFailureListener { onFailureListener.onFailure(it) }
     }
 
     private fun snapshotToUser(snapshot: DocumentSnapshot): User {

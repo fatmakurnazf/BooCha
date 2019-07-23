@@ -44,6 +44,10 @@
             android:name=".feature.swapdetail.ui.SwapDetailActivity"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity
+                android:name=".feature.messages.ui.MessageActivity"
+                android:windowSoftInputMode="adjustPan" />
+
     </application>
 
 </manifest>

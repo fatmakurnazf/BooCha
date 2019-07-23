@@ -10,11 +10,13 @@ import com.boocha.model.Swap
 import com.boocha.model.User
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
+import java.io.File
 
 class ProfileFragmentViewModel : ViewModel() {
 
     val userLiveData = MutableLiveData<Resource<User?>>()
     val swapsLiveData = MutableLiveData<Resource<MutableList<Swap>>>()
+    val updateProfilePhotoLiveData = MutableLiveData<Resource<File>>()
 
     private val repository = Repository(FirebaseService())
 
@@ -43,5 +45,17 @@ class ProfileFragmentViewModel : ViewModel() {
 
     fun signOut() {
         repository.signOut()
+    }
+
+    fun updateProfilePhoto(id: String, imageFile: File) {
+        updateProfilePhotoLiveData.value = Resource.loading(null)
+        repository.updateProfilePhoto(id, imageFile
+                , OnSuccessListener {
+            updateProfilePhotoLiveData.value = Resource.success(imageFile)
+
+        }, OnFailureListener {
+            updateProfilePhotoLiveData.value = Resource.error(it.localizedMessage, null)
+
+        })
     }
 }

@@ -23,6 +23,8 @@ class WriteObjectFile(private val parent: Context) {
             fileIn = FileInputStream(filePath)
             objectIn = ObjectInputStream(fileIn)
             outputObject = objectIn!!.readObject()
+            Log.i(FILE_USER, "READIED")
+
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
         } catch (e: IOException) {
@@ -50,6 +52,7 @@ class WriteObjectFile(private val parent: Context) {
             objectOut = ObjectOutputStream(fileOut)
             objectOut?.writeObject(inputObject)
             fileOut?.fd?.sync()
+            Log.i(FILE_USER, "UPDATED")
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {
@@ -69,9 +72,9 @@ class WriteObjectFile(private val parent: Context) {
         try {
             filePath = parent.applicationContext.filesDir.absolutePath + "/" + fileName
             File(filePath).delete()
+            Log.i(FILE_USER, "DELETED")
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-
 }

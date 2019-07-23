@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import com.boocha.R
 import com.boocha.base.BaseActivity
+import com.boocha.feature.messages.ui.MessageActivity
 import com.boocha.feature.swapdetail.event.BookOwnerClickEvent
+import com.boocha.feature.swapdetail.event.SendSwapRequestClickEvent
 import com.boocha.model.Swap
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -26,10 +28,10 @@ class SwapDetailActivity : BaseActivity() {
 
 
         fun newIntent(
-            context: Context,
-            openedFrom: String,
-            swap: Swap? = null,
-            swaps: ArrayList<Swap?>? = null
+                context: Context,
+                openedFrom: String,
+                swap: Swap? = null,
+                swaps: ArrayList<Swap?>? = null
         ): Intent {
             val intent = Intent(context, SwapDetailActivity::class.java)
             intent.putExtra(EXTRA_OPENED_FROM, openedFrom)
@@ -84,5 +86,10 @@ class SwapDetailActivity : BaseActivity() {
         event.swap?.let {
             navigateSwapDetailFragment(it)
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSendSwapRequestClickEvent(event: SendSwapRequestClickEvent) {
+        startActivity(MessageActivity.newIntent(this, MessageActivity.OPENED_FROM_SWAP_DETAIL_ACTIVITY, swap))
     }
 }

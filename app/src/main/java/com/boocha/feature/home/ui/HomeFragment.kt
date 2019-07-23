@@ -11,6 +11,7 @@ import com.boocha.base.BaseFragment
 import com.boocha.data.remote.util.Status
 import com.boocha.feature.home.adapter.HomeFragmentAdapter
 import com.boocha.feature.home.viewmodel.HomeFragmentViewModel
+import com.boocha.feature.messages.ui.MessageActivity
 import com.boocha.feature.search.ui.SearchActivity
 import com.boocha.feature.swapdetail.ui.SwapDetailActivity
 import com.boocha.model.Swap
@@ -53,6 +54,12 @@ class HomeFragment : BaseFragment() {
         tvSearch.setOnClickListener {
             context?.let {
                 startActivity(SearchActivity.newIntent(it, SearchActivity.OPENED_FROM_HOME_FRAGMENT))
+            }
+        }
+
+        ibMessages.setOnClickListener {
+            context?.let {
+                startActivity(MessageActivity.newIntent(it, MessageActivity.OPENED_FROM_HOME_FRAGMENT))
             }
         }
     }

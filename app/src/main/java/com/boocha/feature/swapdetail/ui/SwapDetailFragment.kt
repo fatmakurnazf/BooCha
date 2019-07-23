@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
 import com.boocha.R
 import com.boocha.base.BaseFragment
+import com.boocha.feature.swapdetail.SwapDetailViewModel
+import com.boocha.feature.swapdetail.event.SendSwapRequestClickEvent
 import com.boocha.model.Swap
 import com.boocha.util.BOOK_STATUS_GOOD
 import com.boocha.util.BOOK_STATUS_NOT_GOOD
@@ -16,7 +19,8 @@ import kotlinx.android.synthetic.main.fragment_swap_detail.*
 
 class SwapDetailFragment : BaseFragment() {
 
-    lateinit var swap: Swap
+    private lateinit var swap: Swap
+    private lateinit var viewModel: SwapDetailViewModel
 
     companion object {
         private const val BUNDLE_SWAP = "bundle_swap"
@@ -39,11 +43,20 @@ class SwapDetailFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProviders.of(this).get(SwapDetailViewModel::class.java)
+
         arguments?.getParcelable<Swap>(BUNDLE_SWAP)?.let {
             swap = it
         }
 
+        initOnClickListener()
         prepareUiWithSwap()
+    }
+
+    private fun initOnClickListener() {
+        btnSendSwapRequest.setOnClickListener {
+            postEvent(SendSwapRequestClickEvent())
+        }
     }
 
     private fun prepareUiWithSwap() {
@@ -61,7 +74,7 @@ class SwapDetailFragment : BaseFragment() {
         if (swap.ownerDescription.isNullOrEmpty()) {
             tvOwnerDescription.visibility = View.GONE
         } else {
-            tvOwnerDescription.visibility = View.GONE
+            tvOwnerDescription.visibility = View.VISIBLE
             tvOwnerDescription.text = swap.ownerDescription
         }
 
@@ -94,5 +107,9 @@ class SwapDetailFragment : BaseFragment() {
 
         tvUsername.text = "${swap.owner?.name} ${swap.owner?.surname}"
         tvDate.text = dateDifference(swap.date ?: "")
+
+        if (swap.owner?.id == viewModel.getSenderUser(context!!)?.id) {
+            btnSendSwapRequest.visibility = View.GONE
+        }
     }
 }
